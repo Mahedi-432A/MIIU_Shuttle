@@ -33,7 +33,27 @@ const getUserBookings = async (req, res) => {
   }
 };
 
+// বুকিং ক্যানসেল করো
+const cancelBooking = async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+    const booking = await Booking.findById(bookingId);
+
+    if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+    // সিট আবার available করো
+    await Bus.findByIdAndUpdate(booking.busId, { $inc: { availableSeats: 1 } });
+
+    await Booking.findByIdAndDelete(bookingId);
+
+    res.json({ message: "Booking cancelled successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Cancel failed", error: err.message });
+  }
+};
+
 module.exports = {
   createBooking,
   getUserBookings,
+  cancelBooking,
 };
