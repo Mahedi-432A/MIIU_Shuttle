@@ -14,14 +14,17 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Login successful!");
-      navigate("/");
+      navigate("/home"); // ✅ পরিবর্তন: "/" এর বদলে "/home"
     } catch (err) {
       toast.error(err.message);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-[calc(100vh-64px)] bg-gray-100">
+      {/* h-screen এর বদলে h-[calc(100vh-64px)] ব্যবহার করা হয়েছে
+        যাতে Navbar এর উচ্চতা (64px) বাদ দিয়ে বাকিটা মাঝখানে আসে
+      */}
       <form
         onSubmit={handleLogin}
         className="bg-white p-8 rounded shadow-md w-80"
