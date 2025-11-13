@@ -8,6 +8,8 @@ import { Toaster } from "react-hot-toast";
 import Profile from "./pages/Profile";
 import Booking from "./pages/Booking";
 import SeatSelection from "./pages/SeatSelection";
+import MyBookings from "./pages/MyBookings";
+import EditProfile from "./pages/EditProfile";
 
 export default function App() {
   return (
@@ -21,6 +23,8 @@ export default function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/seat-selection" element={<SeatSelection />} />
+          <Route path="/my-bookings" element={<MyBookings />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
         </Routes>
         <Toaster position="top-center" />
       </BrowserRouter>

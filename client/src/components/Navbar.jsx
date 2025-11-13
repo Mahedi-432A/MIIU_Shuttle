@@ -12,6 +12,7 @@ export default function Navbar() {
           <>
             <Link to="/booking">Booking</Link>
             <Link to="/profile">Profile</Link>
+            <Link to="/my-bookings">My Bookings</Link>
             <button onClick={logout} className="bg-red-500 px-3 py-1 rounded">
               Logout
             </button>
