@@ -1,7 +1,7 @@
 const admin = require("./config/firebaseAdmin");
 
 // এখানে অ্যাডমিন বানাতে চান এমন ইউজারের ইমেইল দিন
-const email = "admin@email.com"; // ⚠️ পরিবর্তন করুন
+const email = "mbsspiw2@gmail.com"; // ⚠️ পরিবর্তন করুন
 
 const setAdmin = async () => {
   try {
