@@ -11,6 +11,9 @@ const secureRoutes = require("./routes/secure.routes.js");
 const busRoutes = require("./routes/bus.routes.js");
 const bookingRoutes = require("./routes/booking.routes.js");
 
+const adminRoutes = require("./routes/admin.routes.js");
+const noticeRoutes = require("./routes/notice.routes.js");
+
 const seatSocket = require("./sockets/seat.socket.js");
 
 
@@ -27,6 +30,9 @@ app.use(morgan("dev"));
 app.use("/api/secure", secureRoutes);
 app.use("/api/buses", busRoutes);
 app.use("/api/bookings", bookingRoutes);
+
+app.use("/api/admin", adminRoutes);
+app.use("/api/notices", noticeRoutes);
 
 app.get("/", (req, res) => {
   res.send("SmartSeat API is running...");
