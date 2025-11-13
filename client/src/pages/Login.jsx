@@ -1,51 +1,98 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Bus, Eye, EyeOff } from "lucide-react"; 
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/home";
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Login successful!");
-      navigate("/home"); // ✅ পরিবর্তন: "/" এর বদলে "/home"
+      navigate(from, { replace: true }); 
     } catch (err) {
       toast.error(err.message);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-[calc(100vh-64px)] bg-gray-100">
-      {/* h-screen এর বদলে h-[calc(100vh-64px)] ব্যবহার করা হয়েছে
-        যাতে Navbar এর উচ্চতা (64px) বাদ দিয়ে বাকিটা মাঝখানে আসে
-      */}
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-8 rounded shadow-md w-80"
-      >
-        <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 mb-3 border rounded"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 mb-4 border rounded"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="w-full bg-blue-600 text-white py-2 rounded">
-          Login
-        </button>
-      </form>
+    <div className="flex flex-col justify-between h-screen p-8 bg-[#fcf8f0]">
+      {/* উপরের খালি অংশ */}
+      <div></div>
+
+      {/* মাঝের কন্টেন্ট */}
+      <div className="flex flex-col items-center">
+        {/* লোগো */}
+        <div className="w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center mb-4 shadow-md">
+          <Bus size={80} className="text-green-600" />
+        </div>
+
+        <h2 className="text-xl font-semibold text-gray-700 mb-6">
+          Welcome to MIU Shuttle
+        </h2>
+
+        <form onSubmit={handleLogin} className="w-full">
+          {/* ইমেইল ফিল্ড */}
+          <input
+            type="email"
+            placeholder="Enter Your Email"
+            className="w-full p-4 mb-4 border border-gray-300 rounded-lg shadow-sm"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          {/* পাসওয়ার্ড ফিল্ড */}
+          <div className="relative w-full mb-4">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full p-4 border border-gray-300 rounded-lg shadow-sm"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-4 text-gray-500"
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </button>
+          </div>
+
+          {/* Keep me signed in এবং Forgot Password */}
+          <div className="flex justify-between items-center text-sm mb-6">
+            <label className="flex items-center text-gray-600">
+              <input type="checkbox" className="mr-2" />
+              Keep me signed in
+            </label>
+            <a href="#" className="text-gray-600 font-medium">
+              Forgot Password?
+            </a>
+          </div>
+
+          {/* লগইন বাটন */}
+          <button className="w-full bg-green-600 text-white py-4 rounded-lg text-lg font-semibold shadow-lg">
+            Login
+          </button>
+        </form>
+      </div>
+
+      {/* Create an account */}
+      <div className="text-center">
+        <Link to="/register" className="text-green-600 font-medium">
+          Create an account
+        </Link>
+      </div>
     </div>
   );
 }

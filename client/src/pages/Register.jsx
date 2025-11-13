@@ -1,13 +1,12 @@
-// src/pages/Register.jsx
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
-import instance from "../utils/axiosConfig"; // ✅ axios instance ইম্পোর্ট
+import instance from "../utils/axiosConfig";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 
 export default function Register() {
-  // ✅ নতুন state
   const [formData, setFormData] = useState({
     fullName: "",
     mobile: "",
@@ -18,126 +17,178 @@ export default function Register() {
     department: "",
     batch: "",
     gender: "Male",
+    agree: false,
   });
+  const [showPass, setShowPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ ইনপুট হ্যান্ডেল করার জন্য
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    const { email, password, confirmPassword, fullName, mobile } = formData;
+    const { email, password, confirmPassword, fullName, mobile, agree } =
+      formData;
 
     // ভ্যালিডেশন
     if (!fullName || !mobile || !email || !password) {
-      return toast.error("Please fill in all required fields.");
+      return toast.error("Name, Mobile, Email, and Password are required.");
+    }
+    if (password.length < 6) {
+      return toast.error("Password must be at least 6 characters long.");
     }
     if (password !== confirmPassword) {
       return toast.error("Passwords do not match!");
     }
+    if (!agree) {
+      return toast.error("You must accept the Terms and Conditions.");
+    }
 
     try {
       // ধাপ ১: Firebase-এ ইউজার তৈরি করুন
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      await createUserWithEmailAndPassword(auth, email, password);
 
       // ধাপ ২: আমাদের ব্যাকএন্ডে বাকি ডিটেইলস সেভ করুন
-      // (axiosConfig স্বয়ংক্রিয়ভাবে টোকেন পাঠাবে)
-      await instance.post("/secure/register-details", formData);
+      const detailsToSave = { ...formData };
+      delete detailsToSave.password;
+      delete detailsToSave.confirmPassword;
+      delete detailsToSave.agree;
+
+      await instance.post("/secure/register-details", detailsToSave);
 
       toast.success("Account created successfully!");
-      navigate("/login");
+      navigate("/signup-success"); 
     } catch (err) {
-      // Firebase বা আমাদের সার্ভারের এরর দেখান
       toast.error(err.response?.data?.message || err.message);
     }
   };
 
   return (
-    <div className="flex justify-center items-center py-10 bg-gray-100">
+    <div className="flex flex-col h-screen p-6 bg-[#fcf8f0]">
+      {/* হেডার */}
+      <div className="flex items-center mb-6">
+        <Link to="/login" className="p-2">
+          <ChevronLeft size={24} />
+        </Link>
+        <h1 className="text-2xl font-bold text-center flex-grow">
+          Create an account
+        </h1>
+      </div>
+
+      {/* ফর্ম */}
       <form
         onSubmit={handleRegister}
-        className="bg-white p-8 rounded shadow-md w-full max-w-md"
+        className="overflow-y-auto space-y-4 pb-4"
       >
-        <h2 className="text-2xl font-semibold mb-4 text-center">Register</h2>
-
-        {/* নতুন ইনপুট ফিল্ড */}
         <input
           type="text"
-          name="fullName"
-          placeholder="Full Name"
-          className="w-full p-2 mb-3 border rounded"
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="mobile"
-          placeholder="Mobile Number"
-          className="w-full p-2 mb-3 border rounded"
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className="w-full p-2 mb-3 border rounded"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full p-2 mb-3 border rounded"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          className="w-full p-2 mb-4 border rounded"
+          name="fullName" 
+          placeholder="Name"
+          className="w-full p-4 border border-gray-300 rounded-lg"
           onChange={handleChange}
         />
         <input
           type="text"
           name="studentId"
-          placeholder="Student ID (Optional)"
-          className="w-full p-2 mb-3 border rounded"
+          placeholder="Student ID"
+          className="w-full p-4 border border-gray-300 rounded-lg"
+          onChange={handleChange}
+        />
+        {/* Department এবং Batch পাশাপাশি */}
+        <div className="flex space-x-4">
+          <input
+            type="text"
+            name="department"
+            placeholder="Department"
+            className="w-1/2 p-4 border border-gray-300 rounded-lg"
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="batch"
+            placeholder="Batch"
+            className="w-1/2 p-4 border border-gray-300 rounded-lg"
+            onChange={handleChange}
+          />
+        </div>
+        <input
+          type="tel"
+          name="mobile" 
+          placeholder="Phone number"
+          className="w-full p-4 border border-gray-300 rounded-lg"
           onChange={handleChange}
         />
         <input
-          type="text"
-          name="department"
-          placeholder="Department (Optional)"
-          className="w-full p-2 mb-3 border rounded"
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          className="w-full p-4 border border-gray-300 rounded-lg"
           onChange={handleChange}
         />
-        <input
-          type="text"
-          name="batch"
-          placeholder="Batch (Optional)"
-          className="w-full p-2 mb-3 border rounded"
-          onChange={handleChange}
-        />
+        
+        <div className="relative w-full">
+          <input
+            type={showPass ? "text" : "password"}
+            name="password"
+            placeholder="Password (6 digit)"
+            className="w-full p-4 border border-gray-300 rounded-lg"
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPass(!showPass)}
+            className="absolute right-4 top-4 text-gray-500"
+          >
+            {showPass ? <EyeOff /> : <Eye />}
+          </button>
+        </div>
+        <div className="relative w-full">
+          <input
+            type={showConfirmPass ? "text" : "password"}
+            name="confirmPassword"
+            placeholder="Confirm password"
+            className="w-full p-4 border border-gray-300 rounded-lg"
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPass(!showConfirmPass)}
+            className="absolute right-4 top-4 text-gray-500"
+          >
+            {showConfirmPass ? <EyeOff /> : <Eye />}
+          </button>
+        </div>
+
         <select
           name="gender"
-          className="w-full p-2 mb-4 border rounded"
+          className="w-full p-4 border border-gray-300 rounded-lg"
           onChange={handleChange}
+          value={formData.gender}
         >
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
 
-        <button className="w-full bg-blue-600 text-white py-2 rounded">
-          Sign Up
+        <label className="flex items-center text-gray-600 text-sm">
+          <input
+            type="checkbox"
+            name="agree"
+            className="mr-2"
+            onChange={handleChange}
+          />
+          I accept the Trams and condition
+        </label>
+
+        {/* বাটন */}
+        <button className="w-full bg-green-600 text-white py-4 rounded-lg text-lg font-semibold shadow-lg mt-4">
+          Confirmation
         </button>
       </form>
     </div>

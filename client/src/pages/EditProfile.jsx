@@ -1,4 +1,3 @@
-// src/pages/EditProfile.jsx
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import instance from "../utils/axiosConfig";
@@ -7,14 +6,13 @@ import toast from "react-hot-toast";
 export default function EditProfile() {
   const navigate = useNavigate();
   const location = useLocation();
-  // প্রোফাইল পেজ থেকে state-এর মাধ্যমে পাঠানো ডাটা
   const [formData, setFormData] = useState(location.state?.profile);
 
   if (!formData) {
     // যদি কোনো কারণে state না আসে (যেমন: পেজ রিফ্রেশ)
-    // তাহলে ইউজারকে প্রোফাইল পেজে ফেরত পাঠানো ভালো
+    // ProtectedRoute তাকে লগইনে পাঠাবে, কিন্তু আমরা প্রোফাইলেও পাঠাতে পারি
     navigate("/profile");
-    return null; 
+    return null;
   }
 
   const handleChange = (e) => {
@@ -29,7 +27,7 @@ export default function EditProfile() {
     try {
       await instance.put("/secure/profile", formData);
       toast.success("Profile updated successfully!");
-      navigate("/profile"); // আপডেট করে প্রোফাইল পেজে ফেরত যান
+      navigate("/profile");
     } catch (err) {
       toast.error(err.response?.data?.message || "Update failed");
     }
@@ -62,7 +60,7 @@ export default function EditProfile() {
           className="w-full p-2 mb-3 border rounded"
           onChange={handleChange}
         />
-        
+
         <label className="block text-sm font-medium text-gray-700">Email (Cannot be changed)</label>
         <input
           type="email"
@@ -71,7 +69,9 @@ export default function EditProfile() {
           className="w-full p-2 mb-3 border rounded bg-gray-100"
           disabled
         />
-        
+
+        {/* "Date of Birth" ফিল্ডটি আপনার নির্দেশ অনুযায়ী বাদ দেওয়া হয়েছে। */}
+
         <label className="block text-sm font-medium text-gray-700">Student ID</label>
         <input
           type="text"
@@ -108,6 +108,7 @@ export default function EditProfile() {
         >
           <option value="Male">Male</option>
           <option value="Female">Female</option>
+          <option value="Other">Other</option>
         </select>
 
         <button className="w-full bg-blue-600 text-white py-2 rounded">
