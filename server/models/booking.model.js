@@ -6,6 +6,10 @@ const bookingSchema = new mongoose.Schema(
     busId: { type: mongoose.Schema.Types.ObjectId, ref: "Bus", required: true },
     seatNumber: { type: Number, required: true },
     date: { type: Date, default: Date.now },
+
+    journeyFrom: { type: String },
+    journeyTo: { type: String },
+    journeyDate: { type: String },
   },
   { timestamps: true }
 );

@@ -10,6 +10,12 @@ const busSchema = new mongoose.Schema(
     availableSeats: { type: Number, default: 40 },
     driverName: { type: String },
     driverContact: { type: String },
+
+    busType: {
+      type: String,
+      enum: ["Male", "Female", "Combined", "Faculty"],
+      default: "Combined",
+    },
   },
   { timestamps: true }
 );

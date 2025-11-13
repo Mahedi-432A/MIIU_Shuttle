@@ -9,8 +9,6 @@ export default function EditProfile() {
   const [formData, setFormData] = useState(location.state?.profile);
 
   if (!formData) {
-    // যদি কোনো কারণে state না আসে (যেমন: পেজ রিফ্রেশ)
-    // ProtectedRoute তাকে লগইনে পাঠাবে, কিন্তু আমরা প্রোফাইলেও পাঠাতে পারি
     navigate("/profile");
     return null;
   }
@@ -69,8 +67,6 @@ export default function EditProfile() {
           className="w-full p-2 mb-3 border rounded bg-gray-100"
           disabled
         />
-
-        {/* "Date of Birth" ফিল্ডটি আপনার নির্দেশ অনুযায়ী বাদ দেওয়া হয়েছে। */}
 
         <label className="block text-sm font-medium text-gray-700">Student ID</label>
         <input
