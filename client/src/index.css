@@ -1,13 +1,10 @@
 @import "tailwindcss";
-
 /* tailwindcss imports */
-/* @tailwind base;
+@tailwind base;
 @tailwind components;
-@tailwind utilities; */
+@tailwind utilities;
 
-/* ডেস্কটপ ভিউতে আপনার অ্যাপের "বাইরের" রঙ।
-  এটি অ্যাপটিকে একটি ডিভাইসের মতো দেখাবে।
-*/
+
 body {
-  background-color: #f3f4f6; /* Tailwind - bg-gray-100 */
+  background-color: #fcf8f0; 
 }

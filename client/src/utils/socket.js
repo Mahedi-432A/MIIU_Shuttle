@@ -1,4 +1,8 @@
-// src/utils/socket.js
 import { io } from "socket.io-client";
 
-export const socket = io("http://localhost:5000");
+// আপনার সার্ভারের ঠিকানা
+const URL = "http://localhost:5000";
+
+export const socket = io(URL, {
+  transports: ["websocket"], // রিয়েল-টাইমের জন্য WebSocket prefer করা
+});
