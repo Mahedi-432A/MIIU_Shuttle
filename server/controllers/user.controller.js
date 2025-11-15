@@ -1,4 +1,3 @@
-// // controllers/user.controller.js
 // const User = require("../models/user.model");
 
 // // 1. রেজিস্ট্রেশনের পর ইউজার ডিটেইলস সেভ করা
@@ -7,7 +6,6 @@
 //     const { uid, email } = req.user;
 //     const { fullName, mobile, studentId, department, batch, gender } = req.body;
 
-//     // ইউজার আগে থেকেই আছে কি না চেক করুন
 //     const existingUser = await User.findOne({ uid });
 //     if (existingUser) {
 //       return res.status(400).json({ message: "User details already exist" });
@@ -22,6 +20,7 @@
 //       department,
 //       batch,
 //       gender,
+//       fcmTokens: [], // ✅ খালি অ্যারে দিয়ে শুরু
 //     });
 
 //     await newUser.save();
@@ -61,16 +60,38 @@
 //           gender,
 //         },
 //       },
-//       { new: true } // আপডেট করা ডকুমেন্টটি ফেরত দেয়
+//       { new: true }
 //     );
 
 //     if (!user) {
 //       return res.status(404).json({ message: "User profile not found" });
 //     }
-
 //     res.json({ message: "Profile updated successfully", user });
 //   } catch (err) {
 //     res.status(500).json({ message: "Server error", error: err.message });
+//   }
+// };
+
+// // 4. ✅ নতুন ফাংশন: FCM টোকেন সেভ করা
+// const registerFcmToken = async (req, res) => {
+//   try {
+//     const { token } = req.body;
+//     const { uid } = req.user;
+
+//     if (!token) {
+//       return res.status(400).json({ message: "Token is required" });
+//     }
+
+//     // ইউজারকে খুঁজুন এবং টোকেনটি 'fcmTokens' অ্যারেতে যোগ করুন
+//     // $addToSet নিশ্চিত করে যে ডুপ্লিকেট টোকেন সেভ হবে না
+//     await User.findOneAndUpdate(
+//       { uid },
+//       { $addToSet: { fcmTokens: token } }
+//     );
+    
+//     res.status(200).json({ message: "FCM token registered successfully" });
+//   } catch (err) {
+//     res.status(500).json({ message: "Error registering FCM token", error: err.message });
 //   }
 // };
 
@@ -78,15 +99,17 @@
 //   registerUserDetails,
 //   getUserProfile,
 //   updateUserProfile,
+//   registerFcmToken, // ✅ এক্সপোর্ট করুন
 // };
 
 const User = require("../models/user.model");
 
-// 1. রেজিস্ট্রেশনের পর ইউজার ডিটেইলস সেভ করা
+// 1. রেজিস্ট্রেশনের পর ইউজার ডিটেইলস সেভ করা (✅ আপডেটেড)
 const registerUserDetails = async (req, res) => {
   try {
     const { uid, email } = req.user;
-    const { fullName, mobile, studentId, department, batch, gender } = req.body;
+    // role এবং roleSpecific তথ্য ক্লায়েন্ট থেকে আসবে
+    const { fullName, mobile, gender, role, roleSpecific } = req.body;
 
     const existingUser = await User.findOne({ uid });
     if (existingUser) {
@@ -98,11 +121,10 @@ const registerUserDetails = async (req, res) => {
       email,
       fullName,
       mobile,
-      studentId,
-      department,
-      batch,
       gender,
-      fcmTokens: [], // ✅ খালি অ্যারে দিয়ে শুরু
+      role, // ✅ নতুন
+      roleSpecific, // ✅ নতুন
+      fcmTokens: [],
     });
 
     await newUser.save();
@@ -112,7 +134,7 @@ const registerUserDetails = async (req, res) => {
   }
 };
 
-// 2. ইউজারের প্রোফাইল ইনফরমেশন ফেচ করা
+// 2. ইউজারের প্রোফাইল ইনফরমেশন ফেচ করা (আগের মতোই)
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findOne({ uid: req.user.uid });
@@ -125,10 +147,11 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-// 3. ইউজারের প্রোফাইল আপডেট করা
+// 3. ইউজারের প্রোফাইল আপডেট করা (✅ আপডেটেড)
 const updateUserProfile = async (req, res) => {
   try {
-    const { fullName, mobile, studentId, department, batch, gender } = req.body;
+    // এখানে role আপডেট করার সুবিধা নেই, শুধু ভেতরের তথ্য
+    const { fullName, mobile, gender, roleSpecific } = req.body;
 
     const user = await User.findOneAndUpdate(
       { uid: req.user.uid },
@@ -136,10 +159,8 @@ const updateUserProfile = async (req, res) => {
         $set: {
           fullName,
           mobile,
-          studentId,
-          department,
-          batch,
           gender,
+          roleSpecific, // ✅ নতুন
         },
       },
       { new: true }
@@ -149,28 +170,24 @@ const updateUserProfile = async (req, res) => {
       return res.status(404).json({ message: "User profile not found" });
     }
     res.json({ message: "Profile updated successfully", user });
-  } catch (err) {
+  } catch (err)
+{
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// 4. ✅ নতুন ফাংশন: FCM টোকেন সেভ করা
+// 4. FCM টোকেন সেভ করা (আগের মতোই)
 const registerFcmToken = async (req, res) => {
   try {
     const { token } = req.body;
     const { uid } = req.user;
-
     if (!token) {
       return res.status(400).json({ message: "Token is required" });
     }
-
-    // ইউজারকে খুঁজুন এবং টোকেনটি 'fcmTokens' অ্যারেতে যোগ করুন
-    // $addToSet নিশ্চিত করে যে ডুপ্লিকেট টোকেন সেভ হবে না
     await User.findOneAndUpdate(
       { uid },
       { $addToSet: { fcmTokens: token } }
     );
-    
     res.status(200).json({ message: "FCM token registered successfully" });
   } catch (err) {
     res.status(500).json({ message: "Error registering FCM token", error: err.message });
@@ -181,5 +198,5 @@ module.exports = {
   registerUserDetails,
   getUserProfile,
   updateUserProfile,
-  registerFcmToken, // ✅ এক্সপোর্ট করুন
+  registerFcmToken,
 };

@@ -17,7 +17,7 @@ const TicketCard = ({ booking, onCancel }) => {
   return (
     <div className="overflow-hidden bg-white border border-gray-200 shadow-lg rounded-2xl">
       {/* সবুজ হেডার (ছবি অনুযায়ী) */}
-      <div className="p-5 m-3 text-white shadow-lg bg-theme-green rounded-2xl">
+      <div className="p-5 m-3 text-white bg-green-800 shadow-lg rounded-2xl">
         {/* উপরের বাস আইকন (ডেমো) */}
         <div className="flex justify-center mb-4">
           <svg width="100" height="40" viewBox="0 0 125 45" fill="none" xmlns="http://www.w3.org/2000/svg">
