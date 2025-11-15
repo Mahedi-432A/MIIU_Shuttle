@@ -1,12 +1,13 @@
+// ... (imports) ...
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { UserRound, ChevronLeft, ArrowRightLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import instance from "../utils/axiosConfig";
 import { useAuth } from "../constext/AuthContext";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { socket } from "../utils/socket";
-import { UserRound, ChevronLeft, ArrowRightLeft } from "lucide-react";
 
-// সিট রিজার্ভেশন রুলস (লজিকের জন্য)
+// ... (RESERVED_SEATS, useEffects, isSeatDisabled - অপরিবর্তিত) ...
 const RESERVED_SEATS = [1, 2, 3, 4];
 
 export default function SeatSelection() {
@@ -19,7 +20,6 @@ export default function SeatSelection() {
 
   const { bus, journeyInfo } = location.state || {};
 
-  // ... useEffects (সিট লোড, সকেট) ...
   useEffect(() => {
     if (!bus) return;
     setSeats(Array.from({ length: bus.totalSeats || 40 }, (_, i) => i + 1));
@@ -27,9 +27,7 @@ export default function SeatSelection() {
       try {
         const res = await instance.get(`/bookings/bus/${bus._id}`);
         setBookedSeats(res.data);
-      } catch (error) {
-        toast.error("Failed to load seats.", error);
-      }
+      } catch (error) { toast.error("Failed to load seats."); }
     };
     fetchBooked();
 
@@ -52,31 +50,12 @@ export default function SeatSelection() {
     };
   }, [bus]);
 
-  const handleBooking = async () => {
-    if (!selectedSeat) return toast.error("Please select a seat");
-    try {
-      await instance.post("/bookings", {
-        busId: bus._id,
-        seatNumber: selectedSeat,
-        journeyFrom: journeyInfo.from,
-        journeyTo: journeyInfo.to,
-        journeyDate: journeyInfo.date,
-      });
-      toast.success("Seat booked!");
-      navigate("/booking-confirmed");
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Booking failed");
-    }
-  };
-
-  // সিট নিষ্ক্রিয় করার রুলস (এটি ঠিক আছে)
   const isSeatDisabled = (seatNumber) => {
     if (bookedSeats.includes(seatNumber)) return true;
     if (!profile) return true;
     const userRole = profile.role;
     const isReserved = RESERVED_SEATS.includes(seatNumber);
     const isStudentBus = bus.busType !== "Faculty";
-
     if (userRole === "Student") {
       if (isReserved) return true;
     }
@@ -88,7 +67,37 @@ export default function SeatSelection() {
     return false;
   };
 
+
+  // ✅ বুকিং হ্যান্ডেল (আপডেটেড)
+  const handleBooking = async () => {
+    if (!selectedSeat) return toast.error("Please select a seat");
+    
+    // ✅ journeyTimestamp তৈরি করুন
+    // 1. বাস ছাড়ার সময় (e.g., "13:45")
+    const [hours, minutes] = bus.departureTime.split(':');
+    // 2. জার্নির তারিখ (Home পেজ থেকে আসা Date অবজেক্ট)
+    const journeyTimestamp = new Date(journeyInfo.dateObject);
+    // 3. তারিখের সাথে সময় সেট করুন
+    journeyTimestamp.setHours(hours, minutes, 0, 0);
+
+    try {
+      await instance.post("/bookings", {
+        busId: bus._id,
+        seatNumber: selectedSeat,
+        journeyFrom: journeyInfo.from,
+        journeyTo: journeyInfo.to,
+        journeyDate: journeyInfo.dateString, // ✅ ডিসপ্লে স্ট্রিং
+        journeyTimestamp: journeyTimestamp,     // ✅ Date অবজেক্ট
+      });
+      toast.success("Seat booked!");
+      navigate("/booking-confirmed");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Booking failed");
+    }
+  };
+
   if (!bus || !journeyInfo) {
+    // ... (no bus selected fallback) ...
     return (
       <div className="min-h-screen p-6 pb-24 bg-theme-bg">
         <p>No bus selected.</p>
@@ -98,11 +107,11 @@ export default function SeatSelection() {
   }
 
   const availableSeatsLeft = (bus.totalSeats || 40) - bookedSeats.length;
-  const isStudentBus = bus.busType !== "Faculty"; // ✅ বাস টাইপ চেক
+  const isStudentBus = bus.busType !== "Faculty";
 
   return (
     <div className="min-h-screen p-6 pb-24 bg-theme-bg">
-      {/* ...হেডার... */}
+      {/* ... (হেডার অপরিবর্তিত) ... */}
       <header className="flex items-center justify-between mb-6">
         <Link to="/available-buses" className="p-2">
           <ChevronLeft size={24} />
@@ -119,7 +128,7 @@ export default function SeatSelection() {
       </header>
       <p className="mb-4 -mt-4 text-center text-gray-600">Choose your seat!</p>
 
-      {/* ...জার্নি ডিটেইলস কার্ড... */}
+      {/* জার্নি ডিটেইলস কার্ড (✅ আপডেটেড) */}
       <div className="p-5 mb-6 text-white shadow-lg bg-theme-green rounded-2xl">
         <div className="mb-2 font-semibold text-center">Bus no: {bus.busName}</div>
         <div className="flex items-center justify-between">
@@ -130,32 +139,29 @@ export default function SeatSelection() {
           <span className="text-2xl font-bold">{journeyInfo.to}</span>
         </div>
         <div className="pt-2 mt-4 text-center border-t border-green-500">
-          <span className="font-semibold">{journeyInfo.date}</span>
+          {/* ✅ dateString (ফরম্যাটেড স্ট্রিং) ব্যবহার করুন */}
+          <span className="font-semibold">{journeyInfo.dateString}</span>
         </div>
       </div>
 
+      {/* ... (সিট লেআউট, লিজেন্ড, এবং কনফার্ম বাটন অপরিবর্তিত) ... */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* সিট লেআউট (✅ আপডেটেড UI) */}
         <div className="w-full p-4 bg-white shadow rounded-2xl">
           <div className="grid grid-cols-4 gap-3">
             {seats.map((num) => {
               const isDisabled = isSeatDisabled(num);
               const isSelected = selectedSeat === num;
-
-              let seatClass = "bg-gray-200"; // Available
-              if (bookedSeats.includes(num)) seatClass = "bg-yellow-400"; // Booked
-              if (isSelected) seatClass = "bg-red-500"; // Your Seat
-
-              // ✅ কন্ডিশনাল কালার: যদি স্টুডেন্ট বাস হয় এবং সিট রিজার্ভড হয়
+              let seatClass = "bg-gray-200";
+              if (bookedSeats.includes(num)) seatClass = "bg-yellow-400";
+              if (isSelected) seatClass = "bg-red-500";
               if (
                 isStudentBus &&
                 RESERVED_SEATS.includes(num) &&
                 !bookedSeats.includes(num) &&
                 !isSelected
               ) {
-                seatClass = "bg-blue-200"; // Reserved for Faculty
+                seatClass = "bg-blue-200";
               }
-
               return (
                 <button
                   key={num}
@@ -170,8 +176,6 @@ export default function SeatSelection() {
             })}
           </div>
         </div>
-
-        {/* লিজেন্ড (✅ আপডেটেড UI) */}
         <div className="w-full p-4 bg-white shadow rounded-2xl">
           <ul className="space-y-3">
             <li className="flex items-center">
@@ -182,8 +186,6 @@ export default function SeatSelection() {
               <div className="w-5 h-5 mr-3 bg-red-500 rounded-full"></div>
               <span>Your Seat</span>
             </li>
-            
-            {/* ✅ কন্ডিশনাল লিজেন্ড: শুধু স্টুডেন্ট বাসের জন্য দেখাবে */}
             {isStudentBus ? (
               <>
                 <li className="flex items-center">
@@ -196,14 +198,12 @@ export default function SeatSelection() {
                 </li>
               </>
             ) : (
-              // ফ্যাকাল্টি বাসের জন্য শুধু "Available"
               <li className="flex items-center">
                 <div className="w-5 h-5 mr-3 bg-gray-200 rounded-full"></div>
                 <span>Available</span>
               </li>
             )}
           </ul>
-          
           <div className="pt-4 mt-4 border-t">
             <div className="px-4 py-2 font-bold text-center text-green-700 bg-green-100 rounded-lg">
               {availableSeatsLeft} Seats left
@@ -211,8 +211,7 @@ export default function SeatSelection() {
           </div>
         </div>
       </div>
-
-      {/* ...কনফার্ম বাটন... */}
+      
       <div className="mt-8">
         {availableSeatsLeft > 0 ? (
           <button

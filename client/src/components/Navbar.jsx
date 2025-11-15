@@ -41,7 +41,7 @@ export default function Navbar() {
       <div className="bg-white h-16 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-2xl flex justify-around items-center">
         <NavItem to="/home" icon={<Home size={24} />} label="Home" />
         <NavItem to="/my-bookings" icon={<CalendarDays size={24} />} label="Bookings" />
-        <NavItem to="#" icon={<History size={24} />} label="History" />
+        <NavItem to="/history" icon={<History size={24} />} label="History" />
         <NavItem to="/notifications" icon={<Bell size={24} />} label="Notice" />
         {/* <NavItem to="/profile" icon={<Menu size={24} />} label="Menu" /> */}
         <NavItem to="/more" icon={<Menu size={24} />} label="Menu" />

@@ -19,6 +19,7 @@ import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import Notifications from "./pages/Notifications";
 import More from "./pages/More";
+import TripHistory from "./pages/TripHistory";
 
 export default function App() {
   return (
@@ -103,6 +104,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <More />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/history"
+              element={
+                <ProtectedRoute>
+                  <TripHistory />
                 </ProtectedRoute>
               }
             />
