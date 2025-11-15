@@ -1,10 +1,12 @@
 const express = require("express");
-const { getAllBuses } = require("../controllers/bus.controller.js");
-// createBus এবং verifyFirebaseToken এখান থেকে সরানো হয়েছে
+const { findBuses, getBusRoutes } = require("../controllers/bus.controller.js");
 
 const router = express.Router();
 
-// 🔹 সব ইউজার দেখতে পারবে (public)
-router.get("/", getAllBuses);
+// 🔹 বাস খোঁজার রুট (আপডেটেড)
+router.get("/", findBuses);
+
+// 🔹 ✅ নতুন রুট: Autocomplete সাজেশন
+router.get("/routes", getBusRoutes);
 
 module.exports = router;
