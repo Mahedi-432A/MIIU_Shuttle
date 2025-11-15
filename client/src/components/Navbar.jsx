@@ -43,7 +43,8 @@ export default function Navbar() {
         <NavItem to="/my-bookings" icon={<CalendarDays size={24} />} label="Bookings" />
         <NavItem to="#" icon={<History size={24} />} label="History" />
         <NavItem to="/notifications" icon={<Bell size={24} />} label="Notice" />
-        <NavItem to="/profile" icon={<Menu size={24} />} label="Menu" />
+        {/* <NavItem to="/profile" icon={<Menu size={24} />} label="Menu" /> */}
+        <NavItem to="/more" icon={<Menu size={24} />} label="Menu" />
       </div>
     </div>
   );
