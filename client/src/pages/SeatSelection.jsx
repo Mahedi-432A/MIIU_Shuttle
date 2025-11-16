@@ -6,6 +6,7 @@ import instance from "../utils/axiosConfig";
 import { useAuth } from "../constext/AuthContext";
 import toast from "react-hot-toast";
 import { socket } from "../utils/socket";
+import BusIcon from "../assets/icons and logo/Bus image.png"
 
 // ... (RESERVED_SEATS, useEffects, isSeatDisabled - অপরিবর্তিত) ...
 const RESERVED_SEATS = [1, 2, 3, 4];
@@ -27,7 +28,7 @@ export default function SeatSelection() {
       try {
         const res = await instance.get(`/bookings/bus/${bus._id}`);
         setBookedSeats(res.data);
-      } catch (error) { toast.error("Failed to load seats."); }
+      } catch (error) { toast.error("Failed to load seats.", error); }
     };
     fetchBooked();
 
@@ -110,10 +111,10 @@ export default function SeatSelection() {
   const isStudentBus = bus.busType !== "Faculty";
 
   return (
-    <div className="min-h-screen p-6 pb-24 bg-theme-bg">
+    <div className="min-h-screen p-6 pb-24 bg-[#FFFCEF]">
       {/* ... (হেডার অপরিবর্তিত) ... */}
       <header className="flex items-center justify-between mb-6">
-        <Link to="/available-buses" className="p-2">
+        <Link to="/available-buses" className="z-20 p-2 bg-white rounded-full shadow-lg">
           <ChevronLeft size={24} />
         </Link>
         <h1 className="text-xl font-semibold">
@@ -129,8 +130,11 @@ export default function SeatSelection() {
       <p className="mb-4 -mt-4 text-center text-gray-600">Choose your seat!</p>
 
       {/* জার্নি ডিটেইলস কার্ড (✅ আপডেটেড) */}
-      <div className="p-5 mb-6 text-white shadow-lg bg-theme-green rounded-2xl">
-        <div className="mb-2 font-semibold text-center">Bus no: {bus.busName}</div>
+      <div className="p-5 mb-6 text-white bg-green-400 shadow-lg rounded-2xl">
+        <div className="mb-3 font-semibold">Bus Name: {bus.busName}</div>
+        <div className="mx-auto mb-3 w-28">
+          <img className="w-full" src={BusIcon} alt="Bus Icon" />
+        </div>
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold">{journeyInfo.from}</span>
           <div className="flex items-center justify-center w-10 h-10 bg-gray-800 border-4 rounded-full border-theme-green">
@@ -167,7 +171,7 @@ export default function SeatSelection() {
                   key={num}
                   disabled={isDisabled}
                   onClick={() => setSelectedSeat(num)}
-                  className={`w-full h-12 rounded-lg ${seatClass}
+                  className={`w-full h-8 rounded-lg ${seatClass}
                     ${isDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
                     ${isSelected ? "ring-2 ring-red-700" : ""}
                   `}
@@ -217,7 +221,7 @@ export default function SeatSelection() {
           <button
             onClick={handleBooking}
             disabled={!selectedSeat}
-            className="w-full py-4 text-lg font-bold text-gray-900 rounded-lg shadow bg-theme-yellow disabled:opacity-50"
+            className="w-full py-4 text-lg font-bold text-gray-900 rounded-lg shadow bg-[#facc15] disabled:opacity-50"
           >
             Confirm booking
           </button>

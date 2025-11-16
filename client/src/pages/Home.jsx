@@ -11,6 +11,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { socket } from "../utils/socket";
+import logo from "../assets/icons and logo/logo.png";
 
 export default function Home() {
   const { profile } = useAuth();
@@ -18,8 +19,8 @@ export default function Home() {
 
   // ✅ সার্চ স্টেট আপডেটেড: এখন আমরা তারিখের অবজেক্ট সেভ করব
   const [from, setFrom] = useState("Campus");
-  const [to, setTo] = useState("Mirpur 1");
-  const [tripType, setTripType] = useState("Leave");
+  const [to, setTo] = useState("Destination");
+  const [tripType, setTripType] = useState();
   const [searchDate, setSearchDate] = useState(new Date()); // ✅ আজকের তারিখ (অবজেক্ট)
 
   // ... (বাকি state এবং useEffect আগের মতোই) ...
@@ -111,32 +112,31 @@ export default function Home() {
     <div className="min-h-screen p-6 pb-24 bg-theme-bg">
       {/* হেডার */}
       <header className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-2">
-          <Bus size={32} className="text-theme-green" />
-          <span className="text-xl font-bold text-theme-green">MIU SHUTTLE</span>
+        <div className="w-20 h-20">
+          <img src={logo} alt="Logo" className="w-full" />
         </div>
-        <Link to="/profile" className="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full">
-          <UserRound size={24} className="text-gray-500" />
+        <Link to="/profile" className="flex items-center justify-center w-12 h-12 bg-gray-200 rounded-full">
+          <UserRound size={32} className="text-gray-500" />
         </Link>
       </header>
 
       {/* সার্চ কার্ড */}
-      <div className="p-6 text-white shadow-lg bg-theme-green rounded-2xl">
+      <div className="p-6 text-white shadow-lg bg-[#63bd67] rounded-2xl">
         <h2 className="mb-4 text-2xl font-semibold">
           Welcome, {profile?.fullName.split(" ")[0] || "User"}
         </h2>
 
-        <div className="relative space-y-4">
+        <div className="relative space-y-4 hide-scrollbar">
           {/* Boarding From (✅ Autocomplete সহ) */}
           <div className="relative">
-            <MapPin size={20} className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2" />
+            <MapPin size={20} className="absolute text-white -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Boarding From"
               value={tripType === "Leave" ? "Campus" : from}
               onChange={handleFromChange}
               disabled={tripType === "Leave"}
-              className="w-full py-3 pl-10 pr-4 text-gray-900 rounded-lg"
+              className="w-full py-3 pl-10 pr-4 text-white rounded-lg"
             />
             {fromSuggestions.length > 0 && tripType === "Arrive" && (
               <div className="absolute z-10 w-full overflow-y-auto bg-white rounded-b-lg shadow-lg max-h-40">
@@ -155,14 +155,14 @@ export default function Home() {
           
           {/* Destination (✅ Autocomplete সহ) */}
           <div className="relative">
-            <MapPin size={20} className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2" />
+            <MapPin size={20} className="absolute text-white -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Where are you going?"
               value={tripType === "Leave" ? to : "Campus"}
               onChange={handleToChange}
               disabled={tripType === "Arrive"}
-              className="w-full py-3 pl-10 pr-4 text-gray-900 rounded-lg"
+              className="w-full py-3 pl-10 pr-4 text-white rounded-lg"
             />
             {toSuggestions.length > 0 && tripType === "Leave" && (
               <div className="absolute z-10 w-full overflow-y-auto bg-white rounded-b-lg shadow-lg max-h-40">
@@ -189,7 +189,7 @@ export default function Home() {
           <button
             onClick={() => handleTripTypeChange("Arrive")}
             className={`py-3 rounded-lg font-semibold ${
-              tripType === "Arrive" ? "bg-white text-theme-green" : "bg-green-700 text-white"
+              tripType === "Arrive" ? "bg-[#d0e9ea] text-[#3c3c43b3]" : "bg-green-700 text-white"
             }`}
           >
             Arrive
@@ -197,7 +197,7 @@ export default function Home() {
           <button
             onClick={() => handleTripTypeChange("Leave")}
             className={`py-3 rounded-lg font-semibold ${
-              tripType === "Leave" ? "bg-white text-theme-green" : "bg-green-700 text-white"
+              tripType === "Leave" ? "bg-[#d0e9ea] text-[#3c3c43b3]" : "bg-green-700 text-white"
             }`}
           >
             Leave
@@ -206,7 +206,7 @@ export default function Home() {
 
         <button
           onClick={handleFindBuses}
-          className="w-full py-3 mt-6 text-lg font-bold text-gray-900 rounded-lg shadow bg-theme-yellow"
+          className="w-full py-3 mt-6 text-lg font-bold text-gray-900 bg-[#facc15] rounded-lg shadow"
         >
           Find Buses
         </button>

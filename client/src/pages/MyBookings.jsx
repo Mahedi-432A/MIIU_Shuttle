@@ -5,24 +5,33 @@ import toast from "react-hot-toast";
 import { Loader2, ArrowRightLeft, UserRound, ChevronLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import MiniSeatLayout from "../components/MiniSeatLayout"; // ✅ নতুন সিট লেআউট
+import BusIcon from "../assets/icons and logo/Bus image.png"
 
-// টিকিট কার্ড কম্পোনেন্ট (সম্পূর্ণ নতুন ডিজাইন)
+// টিকিট কার্ড কম্পোনেন্ট 
 const TicketCard = ({ booking, onCancel }) => {
   const { busId, seatNumber, journeyFrom, journeyTo, journeyDate, _id } =
     booking;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   if (!busId) return null; // ডিলিটেড বাস হলে দেখাবে না
 
   return (
     <div className="overflow-hidden bg-white border border-gray-200 shadow-lg rounded-2xl">
       {/* সবুজ হেডার (ছবি অনুযায়ী) */}
-      <div className="p-5 m-3 text-white bg-green-800 shadow-lg rounded-2xl">
+      <div className="relative p-5 m-3 text-white bg-green-400 shadow-lg rounded-2xl">
+
+        {/* ক্যানসেল বাটন */}
+        <button
+          onClick={() => onCancel(_id)}
+          title="Cancel Booking"
+          className="absolute p-2 text-red-400 top-2 right-2 hover:text-red-600"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+
         {/* উপরের বাস আইকন (ডেমো) */}
-        <div className="flex justify-center mb-4">
-          <svg width="100" height="40" viewBox="0 0 125 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M106.52 44.521H18.48C10.51 44.521 4 38.01 4 30.041V23.75C4 16.14 9.9 10.27 17.5 9.91L29.35 9.22C32.1 9.08 34.7 7.79 36.5 5.7L42.18 0H82.82L88.5 5.7C90.3 7.79 92.9 9.08 95.65 9.22L107.5 9.91C115.1 10.27 121 16.14 121 23.75V30.041C121 38.01 114.49 44.521 106.52 44.521Z" fill="#fff" fillOpacity="0.2"/>
-          </svg>
+        <div className="w-32 mx-auto mb-4">
+          <img className="w-full" src={BusIcon} alt="Bus Icon" />
         </div>
         
         {/* রুট */}
@@ -43,15 +52,7 @@ const TicketCard = ({ booking, onCancel }) => {
       </div>
       
       {/* সাদা বডি */}
-      <div className="relative p-5">
-        {/* ক্যানসেল বাটন (আমার যোগ করা, দরকারী) */}
-        <button
-          onClick={() => onCancel(_id)}
-          title="Cancel Booking"
-          className="absolute p-2 text-red-400 top-2 right-2 hover:text-red-600"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
+      <div className="p-5">
         
         <div className="flex justify-between space-x-4">
           {/* বাম দিকের তথ্য */}
@@ -137,7 +138,7 @@ export default function MyBookings() {
   };
 
   return (
-    <div className="min-h-screen pb-24 bg-theme-bg"> {/* ✅ ন্যাভবার ফিক্স */}
+    <div className="min-h-screen pb-24 bg-theme-bg"> 
       {/* হেডার (ছবি অনুযায়ী) */}
       <header className="flex items-center justify-between p-6">
         <button

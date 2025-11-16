@@ -3,7 +3,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import { Bus, Eye, EyeOff } from "lucide-react"; 
+import { Eye, EyeOff } from "lucide-react"; 
+import logo from "../assets/icons and logo/logo.png";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -33,11 +34,11 @@ export default function Login() {
       {/* মাঝের কন্টেন্ট */}
       <div className="flex flex-col items-center">
         {/* লোগো */}
-        <div className="w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center mb-4 shadow-md">
-          <Bus size={80} className="text-green-600" />
+        <div className="flex items-center justify-center w-40 h-40 mb-4 shadow-md rounded-4xl">
+          <img src={logo} alt="Logo" className="w-full" />
         </div>
 
-        <h2 className="text-xl font-semibold text-gray-700 mb-6">
+        <h2 className="mb-6 text-xl font-semibold text-gray-700">
           Welcome to MIU Shuttle
         </h2>
 
@@ -63,25 +64,25 @@ export default function Login() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-4 text-gray-500"
+              className="absolute text-gray-500 right-4 top-4"
             >
               {showPassword ? <EyeOff /> : <Eye />}
             </button>
           </div>
 
           {/* Keep me signed in এবং Forgot Password */}
-          <div className="flex justify-between items-center text-sm mb-6">
+          <div className="flex items-center justify-between mb-6 text-sm">
             <label className="flex items-center text-gray-600">
               <input type="checkbox" className="mr-2" />
               Keep me signed in
             </label>
-            <a href="#" className="text-gray-600 font-medium">
+            <a href="#" className="font-medium text-gray-600">
               Forgot Password?
             </a>
           </div>
 
           {/* লগইন বাটন */}
-          <button className="w-full bg-green-600 text-white py-4 rounded-lg text-lg font-semibold shadow-lg">
+          <button className="w-full py-4 text-lg font-semibold text-white bg-green-600 rounded-lg shadow-lg">
             Login
           </button>
         </form>
@@ -89,7 +90,7 @@ export default function Login() {
 
       {/* Create an account */}
       <div className="text-center">
-        <Link to="/register" className="text-green-600 font-medium">
+        <Link to="/register" className="font-medium text-green-600">
           Create an account
         </Link>
       </div>

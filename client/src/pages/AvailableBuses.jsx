@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import instance from "../utils/axiosConfig";
 import { useAuth } from "../constext/AuthContext";
+import BusIcon from "../assets/icons and logo/Bus image.png"
 
 export default function AvailableBuses() {
   const { profile } = useAuth();
@@ -81,7 +82,7 @@ export default function AvailableBuses() {
     <div className="min-h-screen p-6 pb-24 bg-theme-bg">
       {/* ... (হেডার অপরিবর্তিত) ... */}
       <header className="flex items-center justify-between mb-6">
-        <button onClick={() => navigate(-1)} className="p-2">
+        <button onClick={() => navigate(-1)} className="z-20 p-2 bg-white rounded-full shadow-lg">
           <ChevronLeft size={24} />
         </button>
         <h1 className="text-xl font-semibold">
@@ -97,7 +98,10 @@ export default function AvailableBuses() {
       <p className="mb-4 -mt-4 text-center text-gray-600">Select your bus!</p>
 
       {/* জার্নি ডিটেইলস কার্ড (✅ আপডেটেড) */}
-      <div className="p-5 mb-6 text-white shadow-lg bg-theme-green rounded-2xl">
+      <div className="p-5 mb-6 text-white bg-green-400 shadow-lg rounded-2xl">
+        <div className="mx-auto mb-3 w-28">
+          <img className="w-full" src={BusIcon} alt="Bus Icon" />
+        </div>
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold">{searchState.from}</span>
           <div className="flex items-center justify-center w-10 h-10 bg-gray-800 border-4 rounded-full border-theme-green">
@@ -135,13 +139,16 @@ export default function AvailableBuses() {
                   ${isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                 `}
               >
-                <div className="flex items-center justify-center w-12 h-12 mr-4 text-2xl font-bold text-white rounded-lg bg-theme-green">
+                <div className="flex items-center justify-center w-12 h-12 mr-4 text-2xl font-bold text-white bg-green-400 rounded-lg">
                   {index + 1}
                 </div>
                 <div className="text-left">
                   <h3 className="text-lg font-bold">{bus.busType} Bus</h3>
                   <p className="text-sm text-gray-600">
-                    Bus No: {bus.busName} | Driver: {bus.driverName}
+                    Bus Name: {bus.busName}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                     Driver: {bus.driverName}
                   </p>
                   <p className="text-sm text-gray-500">
                     Contact: {bus.driverContact}
@@ -160,7 +167,7 @@ export default function AvailableBuses() {
           <button
             onClick={handleConfirm}
             disabled={!selectedBus}
-            className="w-full py-4 text-lg font-bold text-gray-900 rounded-lg shadow bg-theme-yellow disabled:opacity-50"
+            className="w-full py-4 text-lg font-bold text-gray-900 rounded-lg shadow bg-[#facc15] disabled:opacity-50"
           >
             Confirm
           </button>
