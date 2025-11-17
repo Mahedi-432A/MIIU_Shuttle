@@ -21,8 +21,18 @@ dotenv.config();
 const app = express();
 connectDB();
 
+const origin = [
+  process.env.CORS_ORIGIN_STUDENT, 
+  process.env.CORS_ORIGIN_ADMIN,
+  "http://localhost:5173", // client dev
+  "http://localhost:5174"  // admin dev
+];
+
 // middlewares
-app.use(cors());
+app.use(cors({
+  origin: origin,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -43,8 +53,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    origin: origin,
+    methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
 
