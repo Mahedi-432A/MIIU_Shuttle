@@ -3,7 +3,8 @@ import { auth } from "../firebase/firebase.config";
 import { getIdToken } from "firebase/auth";
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000/api", // আপনার সার্ভার API
+  // baseURL: "http://localhost:5000/api", // আপনার সার্ভার API
+  baseURL: "https://miiu-shuttle-server.onrender.com/api", // আপনার সার্ভার API
 });
 
 // প্রতিটি রিকোয়েস্টে টোকেন পাঠান

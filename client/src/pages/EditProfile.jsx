@@ -409,7 +409,7 @@ export default function EditProfile() {
         >
           <ChevronLeft size={24} />
         </button>
-        <h1 className="flex-grow text-2xl font-bold text-center">
+        <h1 className="text-2xl font-bold text-center grow">
           Edit Profile
         </h1>
       </header>
