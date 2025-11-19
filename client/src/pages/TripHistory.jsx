@@ -61,7 +61,7 @@ export default function TripHistory() {
         >
           <ChevronLeft size={24} className="text-gray-700" />
         </button>
-        <h1 className="flex-grow text-2xl font-bold text-center text-gray-800">
+        <h1 className="text-2xl font-bold text-center text-gray-800 grow">
           Trip History
         </h1>
       </header>
