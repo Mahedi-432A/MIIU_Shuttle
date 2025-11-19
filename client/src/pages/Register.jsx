@@ -5,12 +5,15 @@ import instance from "../utils/axiosConfig";
 import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
 import { ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { useAuth } from "../constext/AuthContext";
 
 export default function Register() {
   const [role, setRole] = useState("Student");
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const navigate = useNavigate();
+
+  const { fetchUserProfile } = useAuth();
 
   // সব ইনপুট ফিল্ডের জন্য একটি স্টেট
   const [formData, setFormData] = useState({
@@ -85,7 +88,7 @@ export default function Register() {
 
     try {
       // ধাপ ১: Firebase-এ ইউজার তৈরি করুন
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
       // ধাপ ২: আমাদের ব্যাকএন্ডে বাকি ডিটেইলস সেভ করুন
       await instance.post("/secure/register-details", {
@@ -95,6 +98,8 @@ export default function Register() {
         role,
         roleSpecific,
       });
+
+      await fetchUserProfile(userCredential.user);
 
       toast.success("Account created successfully!");
       navigate("/signup-success");
