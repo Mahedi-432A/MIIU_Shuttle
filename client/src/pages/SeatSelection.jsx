@@ -56,15 +56,15 @@ export default function SeatSelection() {
     if (!profile) return true;
     const userRole = profile.role;
     const isReserved = RESERVED_SEATS.includes(seatNumber);
-    const isStudentBus = bus.busType !== "Faculty";
+    // const isStudentBus = bus.busType !== "Faculty";
     if (userRole === "Student") {
       if (isReserved) return true;
     }
-    if (userRole === "Faculty" || userRole === "Stuff") {
-      if (isStudentBus) {
-        if (!isReserved) return true;
-      }
-    }
+    // if (userRole === "Faculty" || userRole === "Stuff") {
+    //   if (isStudentBus) {
+    //     if (!isReserved) return true;
+    //   }
+    // }
     return false;
   };
 
