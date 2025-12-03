@@ -3,8 +3,7 @@ import { auth } from "../firebase/firebase.config";
 import { getIdToken } from "firebase/auth";
 
 const instance = axios.create({
-  // baseURL: "http://localhost:5000/api",
-  baseURL: "https://miiu-shuttle-server.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 instance.interceptors.request.use(async (config) => {
