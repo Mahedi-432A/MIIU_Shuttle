@@ -10,8 +10,13 @@ const findBuses = async (req, res) => {
     }
 
     // ✅ টাইম ম্যানেজমেন্ট (আগের মতোই)
-    const now = new Date();
-    const currentTime = now.toTimeString().substring(0, 5); // "HH:mm"
+    // ✅ টাইম ম্যানেজমেন্ট (আপডেটেড: Asia/Dhaka টাইমজোন)
+    const currentTime = new Date().toLocaleTimeString('en-GB', { 
+      timeZone: 'Asia/Dhaka', 
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
 
     // ✅ রুট খোঁজার লজিক (আপডেটেড)
     // $regex এবং 'i' (case-insensitive) ব্যবহার করা হয়েছে
