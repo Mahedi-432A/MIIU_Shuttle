@@ -5,6 +5,10 @@ const cors = require("cors");
 const morgan = require("morgan");
 const http = require("http");
 const { Server } = require("socket.io");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const { errorHandler } = require("./middlewares/error.middleware"); // ✅ Global Error Handler
+
 const connectDB = require("./config/db.js");
 
 const secureRoutes = require("./routes/secure.routes.js");
@@ -35,6 +39,14 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(helmet()); // ✅ Security Headers
+
+// ✅ Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 
 // routes
 app.use("/api/secure", secureRoutes);
@@ -47,6 +59,9 @@ app.use("/api/notices", noticeRoutes);
 app.get("/", (req, res) => {
   res.send("SmartSeat API is running...");
 });
+
+// ✅ Global Error Handler (End of middleware chain)
+app.use(errorHandler);
 
 // Create HTTP + Socket server
 const server = http.createServer(app);
