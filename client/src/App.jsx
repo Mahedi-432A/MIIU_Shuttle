@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AuthProvider } from "./constext/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";

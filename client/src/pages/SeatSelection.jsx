@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserRound, ChevronLeft, ArrowRightLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import instance from "../utils/axiosConfig";
-import { useAuth } from "../constext/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { socket } from "../utils/socket";
 import BusIcon from "../assets/icons and logo/Bus image.png"

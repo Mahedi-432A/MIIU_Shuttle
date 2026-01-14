@@ -1,6 +1,6 @@
 // ... imports ...
 import { useState, useEffect } from "react";
-import { useAuth } from "../constext/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import instance from "../utils/axiosConfig";
 import { useNavigate, Link } from "react-router-dom";
 import {

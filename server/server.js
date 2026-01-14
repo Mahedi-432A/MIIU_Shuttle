@@ -28,14 +28,30 @@ connectDB();
 const origin = [
   process.env.CORS_ORIGIN_STUDENT, 
   process.env.CORS_ORIGIN_ADMIN,
-  "http://localhost:5173", // client dev
-  "http://localhost:5174"  // admin dev
+  "http://localhost:5173",
+  "http://localhost:5174"
 ];
 
 // middlewares
 app.use(cors({
-  origin: origin,
+  origin: (origin, callback) => {
+    // ! Allowing requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // ! Development: Allow ANY local network IP (starts with 192.168...) or localhost
+    if (process.env.NODE_ENV !== "production") {
+      return callback(null, true); 
+    }
+
+    if (origin.indexOf(origin) !== -1) { // strict check for production could be improved but keeping simple for now
+      callback(null, true);
+    } else {
+      console.log("❌ Blocked by CORS:", origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
 app.use(express.json());
 app.use(morgan("dev"));

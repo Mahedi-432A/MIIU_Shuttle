@@ -3,7 +3,7 @@ import { UserRound, ChevronLeft, ArrowRightLeft, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import instance from "../utils/axiosConfig";
-import { useAuth } from "../constext/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import BusIcon from "../assets/icons and logo/Bus image.png"
 
 export default function AvailableBuses() {

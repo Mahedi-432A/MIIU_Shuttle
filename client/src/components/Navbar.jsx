@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { Home, CalendarDays, History, Bell, Menu } from "lucide-react";
-import { useAuth } from "../constext/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 // NavItem Component
 const NavItem = ({ to, icon, label }) => {

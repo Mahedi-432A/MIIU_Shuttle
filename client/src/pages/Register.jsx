@@ -5,7 +5,7 @@ import instance from "../utils/axiosConfig";
 import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
 import { ChevronLeft, Eye, EyeOff } from "lucide-react";
-import { useAuth } from "../constext/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
   const [role, setRole] = useState("Student");

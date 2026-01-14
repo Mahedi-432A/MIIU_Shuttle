@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { messaging } from "../firebase/firebase.config";
 import { getToken, onMessage } from "firebase/messaging";
-import { useAuth } from "../constext/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import instance from "../utils/axiosConfig";
 import toast from "react-hot-toast";
 
