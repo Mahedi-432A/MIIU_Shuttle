@@ -18,4 +18,7 @@ const bookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// ✅ একই বাসে একই সিট ডুপ্লিকেট বুকিং আটকাতে
+bookingSchema.index({ busId: 1, seatNumber: 1 }, { unique: true });
+
 module.exports = mongoose.model("Booking", bookingSchema);

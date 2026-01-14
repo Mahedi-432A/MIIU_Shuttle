@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import instance from "../utils/axiosConfig";
-import { useAuth } from "../constext/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { Loader2, ArrowRightLeft, UserRound, ChevronLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";

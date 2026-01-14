@@ -1,25 +1,30 @@
 
-// const admin = require("firebase-admin");
-// const serviceAccount = require("../firebase-service-account.json");
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-// });
-
-// module.exports = admin;
-
 const admin = require("firebase-admin");
 
-// ⚠️ পরিবর্তন: ফাইল require করার বদলে এনভায়রনমেন্ট ভ্যারিয়েবল থেকে JSON স্ট্রিংটি পড়ুন
+let serviceAccount;
+
 try {
-  const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
+  // const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
   
-  if (!serviceAccountString) {
-    throw new Error("FIREBASE_SERVICE_ACCOUNT environment variable is not set.");
-  }
+  // if (!serviceAccountString) {
+  //   throw new Error("FIREBASE_SERVICE_ACCOUNT environment variable is not set.");
+  // }
 
   // JSON স্ট্রিংটিকে অবজেক্টে রূপান্তর করুন
-  const serviceAccount = JSON.parse(serviceAccountString);
+  // const serviceAccount = JSON.parse(serviceAccountString);
+
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    console.log("🌍 Production Mode: Loading Firebase config from Environment Variable...");
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  } 
+  else {
+    console.log("💻 Development Mode: Loading Firebase config from Local JSON File...");
+    try {
+      serviceAccount = require("../firebase-service-account.json"); 
+    } catch (fileError) {
+      throw new Error("Local 'firebase-service-account.json' file not found.");
+    }
+  }
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),

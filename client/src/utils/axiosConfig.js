@@ -3,8 +3,7 @@ import { auth } from "../firebase/firebase.config";
 import { getIdToken } from "firebase/auth";
 
 const instance = axios.create({
-  // baseURL: "http://localhost:5000/api",
-  baseURL: "https://miiu-shuttle-server.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 instance.interceptors.request.use(async (config) => {
@@ -15,5 +14,18 @@ instance.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+// ✅ Global Error Handler (Interceptors)
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error("API Error:", error);
+    if (!error.response) {
+      // Network Error (Server Down / CORS / Wrong IP)
+      alert("Network Error! Check if Server is running & IP is correct.\n\nDetails: " + error.message);
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default instance;

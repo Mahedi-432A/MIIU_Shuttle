@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserRound, ChevronLeft, ArrowRightLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import instance from "../utils/axiosConfig";
-import { useAuth } from "../constext/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { socket } from "../utils/socket";
 import BusIcon from "../assets/icons and logo/Bus image.png"
@@ -56,15 +56,15 @@ export default function SeatSelection() {
     if (!profile) return true;
     const userRole = profile.role;
     const isReserved = RESERVED_SEATS.includes(seatNumber);
-    const isStudentBus = bus.busType !== "Faculty";
+    // const isStudentBus = bus.busType !== "Faculty";
     if (userRole === "Student") {
       if (isReserved) return true;
     }
-    if (userRole === "Faculty" || userRole === "Stuff") {
-      if (isStudentBus) {
-        if (!isReserved) return true;
-      }
-    }
+    // if (userRole === "Faculty" || userRole === "Stuff") {
+    //   if (isStudentBus) {
+    //     if (!isReserved) return true;
+    //   }
+    // }
     return false;
   };
 
